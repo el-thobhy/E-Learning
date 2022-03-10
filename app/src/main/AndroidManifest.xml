@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ELearning">
         <activity
+            android:name=".presentation.login.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.splash.SplashActivity"
             android:exported="false" />
         <activity
