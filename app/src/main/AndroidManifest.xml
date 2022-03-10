@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ELearning">
         <activity
+            android:name=".presentation.forgotpassword.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.register.RegisterActivity"
             android:exported="false" />
         <activity
