@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ELearning">
         <activity
+            android:name=".presentation.user.UserActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.content.ContentActivity"
             android:exported="false" />
         <activity
