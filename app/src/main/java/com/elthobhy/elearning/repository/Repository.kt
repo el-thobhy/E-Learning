@@ -11,7 +11,7 @@ object Repository {
     fun getMaterials(context: Context?): MutableList<Material>? {
         val json: String
         try {
-            val inputStream = context?.assets?.open("json/materials")
+            val inputStream = context?.assets?.open("json/materials.json")
             json = inputStream?.bufferedReader().use { it?.readText().toString() }
         }catch (e:IOException){
             e.printStackTrace()

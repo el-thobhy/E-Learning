@@ -44,7 +44,7 @@ class PartsPagesAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class YoutubeViewHolder(private val ytbinding: LayoutYoutubeBinding)
         : RecyclerView.ViewHolder(ytbinding.root) {
         fun bindItem(partPage: PartsPage) {
-            ytbinding.yvContent.addYouTubePlayerListener(object : AbstractYouTubePlayerListener(){
+            ytbinding.ytContent.addYouTubePlayerListener(object : AbstractYouTubePlayerListener(){
                 override fun onReady(youTubePlayer: YouTubePlayer) {
                     super.onReady(youTubePlayer)
                     youTubePlayer.cueVideo(partPage.content.toString(), 0F)
