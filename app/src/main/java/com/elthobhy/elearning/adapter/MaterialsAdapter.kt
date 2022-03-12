@@ -29,7 +29,7 @@ class MaterialsAdapter:RecyclerView.Adapter<MaterialsAdapter.ViewHolder>(), Filt
                 filteredList = materials
             }else{
                 for(material in materials){
-                    val title = material.titleMaterial?.trim().lowercase()
+                    val title = material.titleMaterial?.trim()?.lowercase()
 
                     if(title?.contains(filterPatterns)==true){
                         filteredList.add(material)
