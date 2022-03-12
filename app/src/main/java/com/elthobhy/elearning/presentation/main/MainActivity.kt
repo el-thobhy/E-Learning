@@ -11,6 +11,7 @@ import androidx.core.widget.addTextChangedListener
 import com.elthobhy.elearning.R
 import com.elthobhy.elearning.adapter.MaterialsAdapter
 import com.elthobhy.elearning.databinding.ActivityMainBinding
+import com.elthobhy.elearning.presentation.content.ContentActivity
 import com.elthobhy.elearning.presentation.user.UserActivity
 import com.elthobhy.elearning.repository.Repository
 
@@ -74,6 +75,12 @@ class MainActivity : AppCompatActivity() {
             swipeMain.setOnRefreshListener {
                 getDataMaterial()
             }
+        }
+        materialsAdapter.onClick { material, position ->
+            val intent = Intent(this, ContentActivity::class.java)
+            intent.putExtra(ContentActivity.EXTRA_MATERIAL,material)
+            intent.putExtra(ContentActivity.EXTRA_POSISTION, position)
+            startActivity(intent)
         }
     }
 }

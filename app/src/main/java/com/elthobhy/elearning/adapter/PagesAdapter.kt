@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 import com.elthobhy.elearning.databinding.ItemPageBinding
 import com.elthobhy.elearning.models.Page
+import com.elthobhy.elearning.models.PartsPage
 
 class PagesAdapter(private val context: Context): PagerAdapter() {
 
@@ -29,8 +30,12 @@ class PagesAdapter(private val context: Context): PagerAdapter() {
     }
 
     private fun bindItem(binding: ItemPageBinding, page: Page) {
+        val partsPageAdapter = PartsPagesAdapter()
+
+        partsPageAdapter.partsPage = page.partsPage as MutableList<PartsPage>
+
         binding.rvPage.setHasFixedSize(true)
-//        binding.rvPage.adapter
+        binding.rvPage.adapter = partsPageAdapter
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) =
