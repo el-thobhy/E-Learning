@@ -18,7 +18,7 @@ class PagesAdapter(private val context: Context): PagerAdapter() {
 
     override fun getCount(): Int = pages.size
 
-    override fun isViewFromObject(view: View, `object`: Any): Boolean = view ==`object``
+    override fun isViewFromObject(view: View, `object`: Any): Boolean = view ==`object`
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val binding = ItemPageBinding.inflate(LayoutInflater.from(context), container, false)
