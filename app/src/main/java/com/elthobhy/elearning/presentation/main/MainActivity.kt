@@ -8,7 +8,6 @@ import android.os.Looper
 import android.util.Log
 import android.view.inputmethod.EditorInfo
 import androidx.core.widget.addTextChangedListener
-import com.elthobhy.elearning.R
 import com.elthobhy.elearning.adapter.MaterialsAdapter
 import com.elthobhy.elearning.databinding.ActivityMainBinding
 import com.elthobhy.elearning.presentation.content.ContentActivity
@@ -40,6 +39,10 @@ class MainActivity : AppCompatActivity() {
             hideLoading()
             materials?.let{
                 materialsAdapter.materials = it
+                if(intent != null){
+                    val position = intent.getIntExtra(EXTRA_POSITION,0)
+                    binding.rvMaterials.smoothScrollToPosition(position)
+                }
             }
         },1200)
 
@@ -79,8 +82,20 @@ class MainActivity : AppCompatActivity() {
         materialsAdapter.onClick { material, position ->
             val intent = Intent(this, ContentActivity::class.java)
             intent.putExtra(ContentActivity.EXTRA_MATERIAL,material)
-            intent.putExtra(ContentActivity.EXTRA_POSISTION, position)
+            intent.putExtra(ContentActivity.EXTRA_POSITION, position)
             startActivity(intent)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(intent != null){
+            val position = intent.getIntExtra(EXTRA_POSITION,0)
+            binding.rvMaterials.smoothScrollToPosition(position)
+        }
+    }
+
+    companion object{
+        const val EXTRA_POSITION ="extra_position"
     }
 }

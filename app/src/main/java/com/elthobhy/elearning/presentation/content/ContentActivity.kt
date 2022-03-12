@@ -1,15 +1,21 @@
 package com.elthobhy.elearning.presentation.content
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
 import com.elthobhy.elearning.adapter.PagesAdapter
 import com.elthobhy.elearning.databinding.ActivityContentBinding
 import com.elthobhy.elearning.models.Material
 import com.elthobhy.elearning.models.Page
+import com.elthobhy.elearning.presentation.main.MainActivity
 import com.elthobhy.elearning.repository.Repository
+import disable
+import enabled
+import invisible
+import visible
 
 class ContentActivity : AppCompatActivity() {
 
@@ -27,11 +33,41 @@ class ContentActivity : AppCompatActivity() {
         pagesAdapter = PagesAdapter(this)
         getDataIntent()
         onAction()
+        viewPagerCurrentPosition()
+    }
+
+    private fun viewPagerCurrentPosition() {
+        binding.vpContent.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                val totalIndex = pagesAdapter.count
+                currentPosition = position
+                val textIndex = "${currentPosition+1} / $totalIndex"
+                binding.tvIndexContent.text = textIndex
+
+                if(currentPosition == 0){
+                    binding.btnPrevContent.invisible()
+                    binding.btnPrevContent.disable()
+                }else{
+                    binding.btnPrevContent.visible()
+                    binding.btnPrevContent.enabled()
+                }
+            }
+
+            override fun onPageSelected(position: Int) {
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+        })
     }
 
     private fun getDataIntent() {
         if(intent != null){
-            materialPosition = intent.getIntExtra(EXTRA_POSISTION,0)
+            materialPosition = intent.getIntExtra(EXTRA_POSITION,0)
             val materials = intent.getParcelableExtra<Material>(EXTRA_MATERIAL)
 
             binding.tvTitleToolbar.text = materials?.titleMaterial
@@ -50,6 +86,10 @@ class ContentActivity : AppCompatActivity() {
 
             binding.vpContent.adapter = pagesAdapter
             binding.vpContent.setPagingEnabled(false)
+            //init untuk tampilan awal index
+
+            val textIndex = "${currentPosition+1} / ${pagesAdapter.count}"
+            binding.tvIndexContent.text = textIndex
         }, 1200)
     }
 
@@ -67,10 +107,17 @@ class ContentActivity : AppCompatActivity() {
                 finish()
             }
             btnNextContent.setOnClickListener {
-                Toast.makeText(this@ContentActivity,"Next",Toast.LENGTH_LONG).show()
+                if(currentPosition < pagesAdapter.count -1){
+                    binding.vpContent.currentItem += 1
+                }else{
+                    val intent = Intent(this@ContentActivity, MainActivity::class.java)
+                    intent.putExtra(MainActivity.EXTRA_POSITION, materialPosition)
+                    startActivity(intent)
+                    finish()
+                }
             }
             btnPrevContent.setOnClickListener {
-                Toast.makeText(this@ContentActivity,"Prev", Toast.LENGTH_LONG).show()
+                binding.vpContent.currentItem -= 1
             }
             swipeContent.setOnRefreshListener {
                 getDataIntent()
@@ -79,6 +126,6 @@ class ContentActivity : AppCompatActivity() {
     }
     companion object{
         const val EXTRA_MATERIAL = "extra_material"
-        const val EXTRA_POSISTION = "extra_position"
+        const val EXTRA_POSITION = "extra_position"
     }
 }
