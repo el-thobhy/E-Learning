@@ -81,8 +81,6 @@ class PartsPagesAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getItemCount(): Int = partsPage.size
 }
 
