@@ -3,9 +3,12 @@ package com.elthobhy.elearning.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import br.tiagohm.markdownview.css.styles.Github
 import com.elthobhy.elearning.databinding.LayoutMarkdownBinding
 import com.elthobhy.elearning.databinding.LayoutYoutubeBinding
 import com.elthobhy.elearning.models.PartsPage
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 
 class PartsPagesAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -21,13 +24,33 @@ class PartsPagesAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             notifyDataSetChanged()
         }
 
-    class MarkDownViewHolder(markdownBinding: LayoutMarkdownBinding)
+    class MarkDownViewHolder(private  val markdownBinding: LayoutMarkdownBinding)
         : RecyclerView.ViewHolder(markdownBinding.root) {
+        fun bindItem(partPage: PartsPage) {
+            val css = Github()
+            css.addRule(
+                "body",
+                "color: black",
+                "font-family: sans-serif",
+                "padding: 0px",
+                "background-color: #fafafa"
+            )
+            markdownBinding.mdContent.addStyleSheet(css)
+            markdownBinding.mdContent.loadMarkdown(partPage.content)
+        }
 
     }
 
-    class YoutubeViewHolder(ytbinding: LayoutYoutubeBinding)
+    class YoutubeViewHolder(private val ytbinding: LayoutYoutubeBinding)
         : RecyclerView.ViewHolder(ytbinding.root) {
+        fun bindItem(partPage: PartsPage) {
+            ytbinding.yvContent.addYouTubePlayerListener(object : AbstractYouTubePlayerListener(){
+                override fun onReady(youTubePlayer: YouTubePlayer) {
+                    super.onReady(youTubePlayer)
+                    youTubePlayer.cueVideo(partPage.content.toString(), 0F)
+                }
+            })
+        }
 
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -51,7 +74,11 @@ class PartsPagesAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val partPage = partsPage[position]
+        when(getItemViewType(position)){
+            TYPE_YOUTUBE -> (holder as YoutubeViewHolder).bindItem(partPage)
+            TYPE_MARKDOWN -> (holder as MarkDownViewHolder).bindItem(partPage)
+        }
     }
 
     override fun getItemCount(): Int {
