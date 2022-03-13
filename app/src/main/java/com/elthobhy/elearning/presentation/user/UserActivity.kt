@@ -8,16 +8,20 @@ import com.elthobhy.elearning.R
 import com.elthobhy.elearning.databinding.ActivityUserBinding
 import com.elthobhy.elearning.presentation.changepassword.ChangePasswordActivity
 import com.elthobhy.elearning.presentation.login.LoginActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class UserActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUserBinding
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //Init
+        firebaseAuth = FirebaseAuth.getInstance()
         onAction()
     }
 
@@ -33,6 +37,7 @@ class UserActivity : AppCompatActivity() {
                 startActivity(Intent(this@UserActivity,ChangePasswordActivity::class.java))
             }
             btnLogoutUser.setOnClickListener {
+                firebaseAuth.signOut()
                 startActivity(Intent(this@UserActivity, LoginActivity::class.java))
                 finishAffinity()
             }
