@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "822782116955",
+    "project_id": "elearning-project-f0895",
+    "storage_bucket": "elearning-project-f0895.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:822782116955:android:01e8b3035a0c9887196b7e",
+        "android_client_info": {
+          "package_name": "com.elthobhy.elearning"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "822782116955-uvctdeneqplp9krdklle544k6egmv836.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZ4j-cxMIxus24AA-yLyY-nataRstlWyU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "822782116955-uvctdeneqplp9krdklle544k6egmv836.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
