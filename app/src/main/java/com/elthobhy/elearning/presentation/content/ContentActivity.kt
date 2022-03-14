@@ -4,25 +4,63 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.elthobhy.elearning.adapter.PagesAdapter
 import com.elthobhy.elearning.databinding.ActivityContentBinding
+import com.elthobhy.elearning.models.Content
 import com.elthobhy.elearning.models.Material
 import com.elthobhy.elearning.models.Page
 import com.elthobhy.elearning.presentation.main.MainActivity
 import com.elthobhy.elearning.repository.Repository
+import com.google.firebase.database.*
+import com.google.gson.Gson
 import disable
 import enabled
+import gone
 import invisible
+import showDialogError
 import visible
 
 class ContentActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityContentBinding
     private lateinit var pagesAdapter: PagesAdapter
+    private lateinit var contentsDatabase : DatabaseReference
     private var currentPosition = 0
     private var materialPosition = 0
+
+    private val listener = object : ValueEventListener{
+        override fun onDataChange(snapshot: DataSnapshot) {
+            hideLoading()
+            if(snapshot.value != null){
+                showData()
+                val json = Gson().toJson(snapshot.value)
+                val content = Gson().fromJson(json, Content::class.java)
+
+                pagesAdapter.pages = content?.pages as MutableList<Page>
+            }else{
+                showEmptyData()
+            }
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            hideLoading()
+            Log.e("error", "onCancelled: ${error.message}", )
+            showDialogError(this@ContentActivity, error.message)
+        }
+    }
+
+    private fun showData() {
+        binding.ivNoData.gone()
+        binding.vpContent.visible()
+    }
+
+    private fun showEmptyData() {
+        binding.ivNoData.visible()
+        binding.vpContent.gone()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +68,7 @@ class ContentActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //init
+        contentsDatabase = FirebaseDatabase.getInstance("\"https://elearning-project-f0895-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("contents")
         pagesAdapter = PagesAdapter(this)
         getDataIntent()
         onAction()
@@ -79,18 +118,16 @@ class ContentActivity : AppCompatActivity() {
 
     private fun getDataContent(it: Material) {
         showLoading()
-        val content = it.idMaterial?.let { it1 -> Repository.getContents(this)?.get(it1) }
-        Handler(Looper.getMainLooper()).postDelayed({
-            hideLoading()
-            pagesAdapter.pages = content?.pages as MutableList<Page>
+        contentsDatabase
+            .child(it.idMaterial.toString())
+            .addValueEventListener(listener)
 
-            binding.vpContent.adapter = pagesAdapter
-            binding.vpContent.setPagingEnabled(false)
-            //init untuk tampilan awal index
+        binding.vpContent.adapter = pagesAdapter
+        binding.vpContent.setPagingEnabled(false)
+        //init untuk tampilan awal index
 
-            val textIndex = "${currentPosition+1} / ${pagesAdapter.count}"
-            binding.tvIndexContent.text = textIndex
-        }, 1200)
+        val textIndex = "${currentPosition+1} / ${pagesAdapter.count}"
+        binding.tvIndexContent.text = textIndex
     }
 
     private fun showLoading() {
